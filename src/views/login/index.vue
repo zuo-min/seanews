@@ -1,17 +1,18 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <el-form ref="loginFormRef" :model="loginForm">
+      <el-form ref="loginFormRef" :model="loginForm" :rules="rules">
+        <span class="title">海诺新闻网平台</span>
         <img src="./op.png" alt />
-        <el-form-item>
-          <el-input v-model="loginForm.mobile" placeholder="请输入手机号码"></el-input>
+        <el-form-item prop="zhanghao">
+          <el-input v-model="loginForm.zhanghao" placeholder="请输入账号"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="loginForm.code" placeholder="请输入校验码"></el-input>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="xieyi">
           <el-checkbox v-model="loginForm.xieyi"></el-checkbox>
-          <span style="margin-left:10px;">我已阅读并同意用户协议和隐私条款</span>
+          <span style="margin-left:10px; font-size:15px;color:blue;">我已阅读并同意用户协议和隐私条款</span>
         </el-form-item>
         <el-form-item>
           <el-button style="width:100%;" type="primary" @click="login()">登录</el-button>
@@ -24,17 +25,53 @@
 <script>
 export default {
   data() {
+    // 设置自定义校验函数
+    var xieyiTest = function(rule, value, callback) {
+      value ? callback() : callback(new Error("请遵守协议"));
+    };
     return {
       loginForm: {
-        mobile: "",
-        code: "",
-        xieyi: false
+        zhanghao: "",
+        password: "",
+        xieyi: true
+      },
+      rules: {
+        zhanghao: [
+          { required: true, message: "账号必填" },
+          { pattern: /^[0-9]{1,10}$/, message: "请输入10位以下的数字" }
+        ],
+        password: [{ required: true, message: "密码必填" }],
+        xieyi: [{ validator: xieyiTest }]
       }
     };
   },
   methods: {
     login() {
-      this.$router.push({name:'home'})
+      // 进行登录时的表单验证
+      this.$refs.loginFormRef.validate(valid => {
+        if (valid) {
+          // 检验账号密码的真实性
+          var pro = this.$http.post("/api/login", this.loginForm);
+          pro
+          .then(res => {
+            console.log(res)
+            if (res.data.status == 0) {
+              // 客户端记录用户的信息
+              window.sessionStorage.setItem('userInfo',JSON.stringify(res.data.data))
+              // this.$router.push('/home')
+              this.$router.push({ name: "home" });
+            } else {
+              this.$message.error(res.data.message);
+              this.loginForm.zhanghao = ''
+              this.loginForm.password = ''
+            }
+          })
+          .catch(err => {
+            return this.$message.error(err);
+          })
+          // this.$router.push({ name: "home" });
+        }
+      });
     }
   }
 };
@@ -51,7 +88,7 @@ export default {
 
   .login-box {
     width: 400px;
-    height: 300px;
+    height: 380px;
     border-radius: 30px;
     opacity: 0.8;
     background-color: #fff;
@@ -62,8 +99,13 @@ export default {
     img {
       width: 40%;
       // opacity: .9;
-      margin: 0 auto;
-      margin-top: 15px;
+      margin: 10px auto;
+    }
+    .title {
+      display: block;
+      font-size: 20px;
+      color: skyblue;
+      font-weight: bold;
     }
     .el-form {
       width: 75%;

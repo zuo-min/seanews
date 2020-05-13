@@ -5,10 +5,14 @@
         <span class="title">海诺新闻网平台</span>
         <img src="./op.png" alt />
         <el-form-item prop="zhanghao">
-          <el-input v-model="loginForm.zhanghao" placeholder="请输入账号"></el-input>
+          <el-input v-model="loginForm.zhanghao" placeholder="请输入账号">
+            <i slot="prefix" class="iconfont icon-zhanghao"></i>
+          </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"></el-input>
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
+            <i slot="prefix" class="iconfont icon-mima"></i>
+          </el-input>
         </el-form-item>
         <el-form-item prop="xieyi">
           <el-checkbox v-model="loginForm.xieyi"></el-checkbox>
@@ -23,6 +27,8 @@
 </template>
 
 <script>
+// 引入阿里小图标
+import '@/assets/iconfont/iconfont.css'
 export default {
   data() {
     // 设置自定义校验函数

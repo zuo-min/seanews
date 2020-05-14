@@ -9,7 +9,7 @@
         :collapse-transition="false"
         router
       >
-        <el-menu-item index="1" style="width:200px;">
+        <el-menu-item index="1" style="width:200px">
           <i class="el-icon-location"></i>
           <span slot="title">新闻总览页</span>
         </el-menu-item>
@@ -19,7 +19,7 @@
             <span>新闻管理</span>
           </template>
           <el-menu-item index="/news">文章列表</el-menu-item>
-          <el-menu-item index="2-2">新增文章</el-menu-item>
+          <el-menu-item index="/newsadd">新增文章</el-menu-item>
           <el-menu-item index="2-3">评论列表</el-menu-item>
           <el-menu-item index="2-4">素材管理</el-menu-item>
         </el-submenu>
@@ -39,17 +39,17 @@
           <i
             slot="prefix"
             :class="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
-            style="cursor:pointer;"
+            style="cursor:pointer"
             @click="isCollapse=!isCollapse"
           ></i>
-          <span style="margin-left:10px;color:skyblue;font-weight: bold;">海诺头条新闻网平台</span>
+          <span style="margin-left:10pxcolor:skybluefont-weight: bold">海诺头条新闻网平台</span>
         </div>
 
         <div id="rt">
-          <el-input type="text" placeholder="请输入搜索的文章内容" style="width:300px;">
+          <el-input type="text" placeholder="请输入搜索的文章内容" style="width:300px">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
-          <span style="margin:0 10px;">消息</span>
+          <span style="margin:0 10px">消息</span>
           <el-dropdown>
             <span class="el-dropdown-link">
               <img :src="photo" alt width="40" height="40" />
@@ -61,7 +61,7 @@
               <el-dropdown-item>github地址</el-dropdown-item>
               <!-- el-dropdown-item本身是一个“组件”，
               组件是组多html标签的集合体，这个集合体绑定事件，
-              不知道具体给到那个标签使用，因此事件绑定失败 -->
+              不知道具体给到那个标签使用，因此事件绑定失败-->
               <!-- 使用事件修饰符 -->
               <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
             </el-dropdown-menu>
@@ -76,35 +76,36 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       isCollapse: false
     }
   },
-computed: {
-  name () {
-    return JSON.parse(window.sessionStorage.getItem('userInfo')).name
+  computed: {
+    name () {
+      return JSON.parse(window.sessionStorage.getItem('userInfo')).name
+    },
+    photo () {
+      return JSON.parse(window.sessionStorage.getItem('userInfo')).photo
+    }
   },
-  photo () {
-    return JSON.parse(window.sessionStorage.getItem('userInfo')).photo
-  }
-},
-methods: {
-  logout() {
-    this.$confirm('确定退出系统嘛？','退出', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(()=> {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
-    }).catch(()=> {})
+  methods: {
+    logout () {
+      this.$confirm('确定退出系统嘛?', '退出', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          window.sessionStorage.clear()
+          this.$router.push('/login')
+        })
+        .catch(() => {})
+    }
   }
 }
-}
 </script>
-</script>
-<style lang="less" scoped>
+<style lang='less' scoped>
 .el-container {
   height: 100%;
   .el-aside {

@@ -17,6 +17,7 @@ const routes = [
     children:[
       {path: '/welcome',name:'welcome',component: () => import('@/views/welcome')},
       {path: '/news',name:'news',component: () => import('@/views/news')},
+      {path: '/newsadd',name:'newsadd',component: () => import('@/views/newsadd')}
     ]
   }
 ]

@@ -10,13 +10,13 @@
           </el-input>
         </el-form-item>
         <el-form-item prop='password'>
-          <el-input v-model='loginForm.password' type='password' placeholder='请输入密码'>
+          <el-input v-model='loginForm.password' type='password' placeholder='请输入密码' @keyup.native.enter="login()">
             <i slot='prefix' class='iconfont icon-mima'></i>
           </el-input>
         </el-form-item>
         <el-form-item prop='xieyi'>
           <el-checkbox v-model='loginForm.xieyi'></el-checkbox>
-          <span style='margin-left:10px font-size:15pxcolor:blue'>我已阅读并同意用户协议和隐私条款</span>
+          <span style='margin-left:20px; font-size:15px;color:blue'>我已阅读并同意用户协议和隐私条款</span>
         </el-form-item>
         <el-form-item>
           <el-button style='width:100%' type='primary' @click='login()'>登录</el-button>
@@ -30,6 +30,7 @@
 // 引入阿里小图标
 import '@/assets/iconfont/iconfont.css'
 export default {
+  name: 'Login',
   data () {
     // 设置自定义校验函数
     var xieyiTest = function (rule, value, callback) {
@@ -39,7 +40,7 @@ export default {
       loginForm: {
         zhanghao: '',
         password: '',
-        xieyi: true
+        xieyi: false
       },
       rules: {
         zhanghao: [

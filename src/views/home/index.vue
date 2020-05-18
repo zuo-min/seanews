@@ -9,7 +9,7 @@
         :collapse-transition="false"
         router
       >
-        <el-menu-item index="1" style="width:200px">
+        <el-menu-item index="/welcome" style="width:200px">
           <i class="el-icon-location"></i>
           <span slot="title">新闻总览页</span>
         </el-menu-item>
@@ -18,16 +18,11 @@
             <i class="el-icon-menu"></i>
             <span>新闻管理</span>
           </template>
-          <el-menu-item index="/news">文章列表</el-menu-item>
-          <el-menu-item index="/newsadd">新增文章</el-menu-item>
-          <el-menu-item index="2-3">评论列表</el-menu-item>
-          <el-menu-item index="2-4">素材管理</el-menu-item>
+          <el-menu-item index="/news">新闻列表</el-menu-item>
+          <el-menu-item index="/newsadd">新增新闻</el-menu-item>
+          <!-- <el-menu-item index="/newsedit">修改新闻</el-menu-item> -->
         </el-submenu>
-        <el-menu-item index="3" :style="{width:isCollapse?'65px':'200px'}">
-          <i class="el-icon-location"></i>
-          <span slot="title">粉丝管理</span>
-        </el-menu-item>
-        <el-menu-item index="4" :style="{width:isCollapse?'65px':'200px'}">
+        <el-menu-item index="/account" :style="{width:isCollapse?'65px':'200px'}">
           <i class="el-icon-location"></i>
           <span slot="title">账户管理</span>
         </el-menu-item>
@@ -42,7 +37,7 @@
             style="cursor:pointer"
             @click="isCollapse=!isCollapse"
           ></i>
-          <span style="margin-left:10pxcolor:skybluefont-weight: bold">海诺头条新闻网平台</span>
+          <span style="margin-left:10px;color:skyblue;font-weight: bold;">海诺头条新闻网平台</span>
         </div>
 
         <div id="rt">
@@ -51,7 +46,12 @@
           </el-input>
           <span style="margin:0 10px">消息</span>
           <el-dropdown>
-            <span class="el-dropdown-link">
+            <span class="el-dropdown-link" v-if="photo === null">
+              <img src="./no.jpg" alt width="40" height="40" />
+              {{name}}
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <span class="el-dropdown-link" v-else>
               <img :src="photo" alt width="40" height="40" />
               {{name}}
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -76,6 +76,7 @@
 </template>
 <script>
 export default {
+  name: 'Home',
   data () {
     return {
       isCollapse: false

@@ -4,7 +4,7 @@
       <span>个人信息</span>
     </div>
     <div class="text item cardbody">
-      <div class="pic" v-if="accountForm.photo === null">
+      <div class="pic" v-if="accountForm.photo === '' || accountForm.photo === null">
         <img src="./no.jpg" alt />
       </div>
       <div class="pic" v-else>
@@ -45,11 +45,12 @@
       </el-form>
     </el-dialog>
     <el-dialog title="头像修改" :visible.sync="isPic" top="300px" width="300px">
-      <el-upload 
-      action="$http.defaults.baseURL + '/public/user_photo'" 
-      :show-file-list="false" 
-      :on-success="afterUpload"
-      class="avatar-uploader"
+      <el-upload
+        action=""
+        :http-request="httpRequest"
+        :show-file-list="false"
+        :on-success="afterUpload"
+        class="avatar-uploader"
       >
         <i class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -58,88 +59,111 @@
 </template>
 
 <script>
+import bus from '@/utils/bus.js'
 export default {
-  name: "Account",
-  data() {
+  name: 'Account',
+  data () {
     return {
       accountForm: {
-        Id: "",
-        password: "",
-        identity: "",
-        photo: ""
+        Id: '',
+        password: '',
+        identity: '',
+        photo: ''
       },
       isDia: false,
       isPic: false,
       passwordForm: {
-        oldPwd: "",
-        newPwd: "",
-        surePwd: ""
+        oldPwd: '',
+        newPwd: '',
+        surePwd: ''
       },
       rules: {
-        oldPwd: [{ required: true, message: "请输入旧密码" }],
-        newPwd: [{ required: true, message: "请输入新密码" }],
-        surePwd: [{ required: true, message: "请再次输入新密码" }]
+        oldPwd: [{ required: true, message: '请输入旧密码' }],
+        newPwd: [{ required: true, message: '请输入新密码' }],
+        surePwd: [{ required: true, message: '请再次输入新密码' }]
       }
-    };
+    }
   },
-  created() {
-    this.getAccount();
+  created () {
+    this.getAccount()
+    // console.log(this.$http.defaults.baseURL + 'api/userphoto')
   },
   computed: {
-    name() {
-      return JSON.parse(window.sessionStorage.getItem("userInfo")).name;
+    name () {
+      return JSON.parse(window.sessionStorage.getItem('userInfo')).name
     }
   },
   methods: {
-    closeDig() {
-      this.passwordForm.oldPwd = "";
-      this.passwordForm.newPwd = "";
-      this.passwordForm.surePwd = "";
+    closeDig () {
+      this.passwordForm.oldPwd = ''
+      this.passwordForm.newPwd = ''
+      this.passwordForm.surePwd = ''
     },
-    getAccount() {
-      var pro = this.$http.get("/api/account/", {
+    getAccount () {
+      var pro = this.$http.get('/api/account/', {
         params: { zhanghao: this.name }
-      });
+      })
       pro
         .then(res => {
           if (res.data.status === 0) {
             // console.log(res.data.data)
-            this.accountForm = res.data.data[0];
+            this.accountForm = res.data.data[0]
           }
         })
         .catch(err => {
-          return this.$message.error("获取个人信息出错!" + err);
-        });
+          return this.$message.error('获取个人信息出错!' + err)
+        })
     },
-    editPwd() {
-      var pro = this.$http.post("/api/pwdedit/", this.passwordForm, {
+    editPwd () {
+      var pro = this.$http.post('/api/pwdedit/', this.passwordForm, {
         params: { id: this.accountForm.Id }
-      });
+      })
       pro
         .then(res => {
           if (res.data.status === 0) {
             if (res.data.oldPwd !== this.accountForm.password) {
-              this.$message.error("原密码输入错误!");
-              this.isDia = false;
+              this.$message.error('原密码输入错误!')
+              this.isDia = false
             } else if (res.data.newPwd === res.data.oldPwd) {
-              this.$message.error("新密码不能与原密码相同！");
+              this.$message.error('新密码不能与原密码相同！')
             } else if (res.data.newPwd !== res.data.surePwd) {
-              this.$message.error("两次密码不一致！");
+              this.$message.error('两次密码不一致！')
             } else {
-              this.$message.success("密码修改成功!");
-              this.isDia = false;
+              this.$message.success('密码修改成功!')
+              this.isDia = false
             }
           }
         })
         .catch(err => {
-          return this.$message.error("修改密码失败" + err);
-        });
+          return this.$message.error('修改密码失败' + err)
+        })
     },
-    afterUpload () {
-      
+    afterUpload () {},
+    httpRequest (resource) {
+      // 1. FormData表单数据对象收集表单信息，即上传附件信息
+      var fd = new FormData()
+      // 把图片的信息添加给fd对象
+      // fd.append(名称，值)
+      fd.append('file', resource.file) // 文件已经被fd保存好了
+
+      // 2. axios带着附件到达服务器端存储
+      var pro = this.$http.post('/api/userphoto', fd)
+      pro
+        .then(res => {
+          if (res.data.status === 0) {
+            bus.$emit('upAccountPhoto', res.data.photo)
+            this.accountForm.photo = res.data.photo
+            this.isPic = false
+            this.$message.success('头像更新成功')
+            this.getAccount()
+          }
+        })
+        .catch(err => {
+          return this.$message.error('头像更新失败：' + err)
+        })
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

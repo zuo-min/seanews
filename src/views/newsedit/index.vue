@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     getNewsType () {
-      let pro = this.$http.get('/api/newstype')
+      var pro = this.$http.get('/api/newstype')
       pro
         .then(res => {
           // console.log(res)
@@ -102,7 +102,7 @@ export default {
         if (valid) {
           // 把被添加的文章信息通过axios传递给服务器端存储
           // this.$http.post(地址,post数据,get请求字符串信息)
-          let pro = this.$http.post('/api/newsedit', this.editForm, { params:{ id: this.aid }})
+          var pro = this.$http.post('/api/newsedit', this.editForm, { params: { id: this.aid } })
           pro
             .then(res => {
               if (res.data.status === 0) {
@@ -117,38 +117,10 @@ export default {
       })
     },
     getNewsByid () {
-      let pro = this.$http.get('/api/newsbyid/',{ params: { id: this.aid }})
+      var pro = this.$http.get('/api/newsbyid/', { params: { id: this.aid } })
       pro
         .then(res => {
           if (res.data.status === 0) {
-            // let a = res.data.data[0].type
-            // switch(true) {
-            //   case a === '1': 
-            //     a = '要闻';
-            //     break;
-            //   case a === '2': 
-            //     a = '抗肺炎';
-            //     break;
-            //   case a === '3': 
-            //     a = '娱乐';
-            //     break;
-            //   case a === '4': 
-            //     a = '体育';
-            //     break;
-            //   case a === '5': 
-            //     a = '美食';
-            //     break;
-            //   case a === '6': 
-            //     a = '动漫';
-            //     break;
-            //   case a === '7': 
-            //     a = '游戏';
-            //     break;
-            //   case a === '8': 
-            //     a = '历史';
-            //     break;
-            // }
-            // res.data.data[0].type = a
             this.editForm = res.data.data[0]
           }
         })

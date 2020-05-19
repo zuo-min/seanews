@@ -41,10 +41,9 @@
         </div>
 
         <div id="rt">
-          <el-input type="text" placeholder="请输入搜索的文章内容" style="width:300px">
+          <el-input type="text" placeholder="请输入搜索的文章内容" style="width:300px;margin-right:30px">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
-          <span style="margin:0 10px">消息</span>
           <el-dropdown>
             <span class="el-dropdown-link" v-if="photo === null">
               <img src="./no.jpg" alt width="40" height="40" />
@@ -75,19 +74,38 @@
   </el-container>
 </template>
 <script>
+import bus from '@/utils/bus.js'
 export default {
   name: 'Home',
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      tmpphoto: ''
     }
+  },
+  created () {
+    bus.$on('upAccountPhoto', ph => {
+      ph = ph.replace(/'/g, '')
+      console.log(ph)
+      // 更新sessionStorage中photo的信息
+      var userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+      userInfo.photo = ph
+      window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+      // 更新临时成员tmpphoto
+      this.tmpphoto = ph
+    })
   },
   computed: {
     name () {
-      return JSON.parse(window.sessionStorage.getItem('userInfo')).name
+      return (
+        JSON.parse(window.sessionStorage.getItem('userInfo')).name
+      )
     },
     photo () {
-      return JSON.parse(window.sessionStorage.getItem('userInfo')).photo
+      return (
+        this.tmpphoto ||
+        JSON.parse(window.sessionStorage.getItem('userInfo')).photo
+      )
     }
   },
   methods: {

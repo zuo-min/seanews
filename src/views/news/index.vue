@@ -92,15 +92,15 @@
           </el-table-column>
           <el-table-column label="审批" v-if="identity === '新闻编辑审查者'">
             <template slot-scope="stData">
-              <el-button 
-              size="mini" 
-              type="success" 
+              <el-button
+              size="mini"
+              type="success"
               v-if="stData.row.status ==='0'"
               @click="shenhe(stData.row.Id, 0)"
               >通过</el-button>
-              <el-button 
-              size="mini" 
-              type="warning" 
+              <el-button
+              size="mini"
+              type="warning"
               v-if="stData.row.status ==='0'"
               style="margin-left:0px"
               @click="shenhe(stData.row.Id, 1)"
@@ -135,15 +135,15 @@
 
 <script>
 export default {
-  name: "News",
-  data() {
+  name: 'News',
+  data () {
     return {
       // 搜索表单数据对象
       searchForm: {
-        status: "",
-        type: "", // 类型
-        begin_pubdate: "", // 文章发布开始时间
-        end_pubdate: "", // 文章发布结束时间
+        status: '',
+        type: '', // 类型
+        begin_pubdate: '', // 文章发布开始时间
+        end_pubdate: '', // 文章发布结束时间
         page: 1, // 默认第一页数据
         per_page: 10 // 每页返回10条数据记录
       },
@@ -151,84 +151,84 @@ export default {
       newsList: [], // 新闻数据
       typeList: [], // 类型数据
       timetotime: [] // 临时接收时间范围信息
-    };
+    }
   },
-  created() {
-    this.getNewsType();
-    this.getNewsList();
+  created () {
+    this.getNewsType()
+    this.getNewsList()
   },
   watch: {
     // 对timetotime成员进行监听
-    timetotime(newval) {
+    timetotime (newval) {
       // 把newval的值拆分分别给到 begin_pubdate和end_pubdate 里边
       if (newval) {
         // 赋予时间信息
-        this.searchForm.begin_pubdate = newval[0];
-        this.searchForm.end_pubdate = newval[1];
+        this.searchForm.begin_pubdate = newval[0]
+        this.searchForm.end_pubdate = newval[1]
       } else {
         // 清空
-        this.searchForm.begin_pubdate = "";
-        this.searchForm.end_pubdate = "";
+        this.searchForm.begin_pubdate = ''
+        this.searchForm.end_pubdate = ''
       }
     },
     // 对searchForm的各个成员多深度监听，统一筛选获得文章
     searchForm: {
-      handler: function(newv, oldv) {
-        this.getNewsList();
+      handler: function (newv, oldv) {
+        this.getNewsList()
       },
       deep: true
     }
   },
   computed: {
-    identity() {
-      return JSON.parse(window.sessionStorage.getItem("userInfo")).identity;
+    identity () {
+      return JSON.parse(window.sessionStorage.getItem('userInfo')).identity
     }
   },
   methods: {
-    getNewsType() {
-      var pro = this.$http.get("/api/newstype");
+    getNewsType () {
+      var pro = this.$http.get('/api/newstype')
       pro
         .then(res => {
           // console.log(res)
           if (res.data.status === 0) {
-            this.typeList = res.data.data;
+            this.typeList = res.data.data
             // console.log(this.typeList)
           }
         })
         .catch(err => {
-          return this.$message.error("获取新闻列表失败!" + err);
-        });
+          return this.$message.error('获取新闻列表失败!' + err)
+        })
     },
-    getNewsList() {
+    getNewsList () {
       // 把空的筛选条件都去除
-      var searchData = {}; // 筛选后的条件数据
+      var searchData = {} // 筛选后的条件数据
       for (var i in this.searchForm) {
         // i：代表遍历出来对象的成员属性名称： status、channel_id、page等等
         if (this.searchForm[i]) {
-          searchData[i] = this.searchForm[i];
+          searchData[i] = this.searchForm[i]
         }
       }
-      var pro = this.$http.get("/api/newslist", { params: searchData });
+      var pro = this.$http.get('/api/newslist', { params: searchData })
       pro
         .then(res => {
           for (var i = 0; i < res.data.data.length; i++) {
             // console.log(res.data.data[i].pubdate)
-            var str = String(res.data.data[i].pubdate);
+            var str = String(res.data.data[i].pubdate)
             res.data.data[i].pubdate =
-              str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
+              str.slice(0, 4) + '-' + str.slice(4, 6) + '-' + str.slice(6)
           }
           if (res.data.status === 0) {
-            this.newsList = res.data.data;
+            this.newsList = res.data.data
             // console.log(this.newsList)
-            this.tot = res.data.total_count;
+            this.tot = res.data.total_count
           }
         })
         .catch(err => {
-          return this.$message.error("获取新闻列表失败!" + err);
-        });
+          return this.$message.error('获取新闻列表失败!' + err)
+        })
     },
-    shenhe(id,num) {
-      var pro = this.$http.post('/api/editstatus/', { id: id, num :num })
+    shenhe (id, num) {
+      var pro = this.$http.post('/api/editstatus/', { id: id, num: num })
       pro
         .then(res => {
           if (res.data.status === 0) {
@@ -237,44 +237,44 @@ export default {
           }
         })
         .catch(err => {
-          return this.$message.error('审核失败' + err )
+          return this.$message.error('审核失败' + err)
         })
     },
-    del(id) {
-      this.$confirm("确认要删除嘛?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    del (id) {
+      this.$confirm('确认要删除嘛?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
-          var pro = this.$http.get("/api/newsdel/", { params: { id: id } });
+          var pro = this.$http.get('/api/newsdel/', { params: { id: id } })
           pro
             .then(res => {
               if (res.data.status === 0) {
-                this.getNewsList();
-                this.$message.success("新闻删除成功!");
+                this.getNewsList()
+                this.$message.success('新闻删除成功!')
               }
             })
             .catch(err => {
-              return this.$message.error("删除新闻失败!" + err);
-            });
+              return this.$message.error('删除新闻失败!' + err)
+            })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     // 当前页码变化的回调处理
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       // val: 变化后页码的值
-      this.searchForm.page = val;
-      this.getNewsList();
+      this.searchForm.page = val
+      this.getNewsList()
     },
     // 每页数据记录条数变化的回调处理
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       // val: 变化后的页码条数
-      this.searchForm.per_page = val;
-      this.getNewsList();
+      this.searchForm.per_page = val
+      this.getNewsList()
     }
   }
-};
+}
 </script>
 
 <style lang='less' scoped>

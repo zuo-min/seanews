@@ -2,9 +2,9 @@
   <el-container>
     <el-aside :width="isCollapse?'65px':'200px'">
       <el-menu
-        background-color="#323745"
-        text-color="#fff"
-        active-text-color="#ffd04b"
+        background-color="#fff"
+        text-color="#000"
+        active-text-color="#FF69B4"
         :collapse="isCollapse"
         :collapse-transition="false"
         router
@@ -23,7 +23,7 @@
           <!-- <el-menu-item index="/newsedit">修改新闻</el-menu-item> -->
         </el-submenu>
         <el-menu-item index="/account" :style="{width:isCollapse?'65px':'200px'}">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-user-solid"></i>
           <span slot="title">账户管理</span>
         </el-menu-item>
       </el-menu>
@@ -128,7 +128,16 @@ export default {
 .el-container {
   height: 100%;
   .el-aside {
-    background-color: rgb(50, 55, 69);
+    background: url('./111.jpg') no-repeat;
+    // background-position: 0,-50px;
+    .el-menu {
+      opacity: .5;
+      font-weight: 800;
+      font-size: 20px;
+      li {
+        margin-top: 20px;
+      }
+    }
   }
   .el-header {
     background-color: white;

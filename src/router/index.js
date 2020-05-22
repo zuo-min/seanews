@@ -15,7 +15,6 @@ const routes = [
     component: () => import('@/views/home'),
     redirect: '/welcome', // 路由重定向
     children: [
-      { path: '/welcome', name: 'welcome', component: () => import('@/views/welcome') },
       { path: '/news', name: 'news', component: () => import('@/views/news') },
       { path: '/newsadd', name: 'newsadd', component: () => import('@/views/newsadd') },
       { path: '/newsedit/:aid', name: 'newsedit', component: () => import('@/views/newsedit') }, // 路由跳转需要传参
@@ -25,7 +24,8 @@ const routes = [
         component: () => import('@/views/account/account')
       }
     ]
-  }
+  },
+  { path: '/welcome', name: 'welcome', component: () => import('@/views/welcome') },
 ]
 
 const router = new VueRouter({

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--搜索卡片区-->
-    <el-card class="box-card">
+    <el-card class="search-card">
       <!--命名插槽，头部内容-->
       <div slot="header" class="clearfix">
         <span>全部图文</span>
@@ -279,8 +279,9 @@ export default {
 
 <style lang='less' scoped>
 /*给卡片区设置向下的外边距*/
-.box-card {
+.search-card {
   margin-bottom: 15px;
+  background: url('./444.jpg');
 }
 .el-pagination {
   margin-top: 15px;

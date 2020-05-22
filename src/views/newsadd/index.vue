@@ -158,6 +158,9 @@ export default {
 .el-form /deep/ .ql-editor {
   height: 200px;
 }
+.box-card {
+  background: url('./bj.jpg');
+}
 .uploadbox {
   list-style: none;
   width: 200px;

@@ -2,7 +2,7 @@
   <div class='login-container'>
     <div class='login-box'>
       <el-form ref='loginFormRef' :model='loginForm' :rules='rules'>
-        <span class='title'>海诺新闻网平台</span>
+        <span class='title'>海 诺 头 条 新 闻 网 平 台</span>
         <img src='./op.png' alt />
         <el-form-item prop='zhanghao'>
           <el-input v-model='loginForm.zhanghao' placeholder='请输入账号'>
@@ -29,6 +29,7 @@
 <script>
 // 引入阿里小图标
 import '@/assets/iconfont/iconfont.css'
+import '@/assets/js/gt.js'
 export default {
   name: 'Login',
   data () {
@@ -42,6 +43,7 @@ export default {
         password: '',
         xieyi: false
       },
+      ctaObj: null,
       rules: {
         zhanghao: [
           { required: true, message: '账号必填' },
@@ -57,7 +59,38 @@ export default {
       // 进行登录时的表单验证
       this.$refs.loginFormRef.validate(valid => {
         if (valid) {
-          // 检验账号密码的真实性
+          if (this.ctaObj !== null) {
+            return this.ctaObj.verify()
+          }
+          // 获取极验秘钥信息
+          var pro = this.$http.get('/gt/register-click')
+          pro
+          .then(res => {
+            let data = res.data
+            window.initGeetest({
+              gt: data.gt,
+              challenge: data.challenge,
+              offline: !data.success,
+              new_captcha: true,
+              product: 'bind'
+            }, captchaObj => {
+              captchaObj.onReady(() => {
+                this.ctaObj = captchaObj
+                captchaObj.verify()
+              }).onSuccess(() => {
+                this.loginAct()
+              }).onError(() => {})
+            })
+          })
+          .catch(err => {
+            return this.$message.error('出错了')
+          })
+        }
+      })
+    },
+    // 登录检验账号真实性，登录后台首页
+    loginAct () {
+      // 检验账号密码的真实性
           var pro = this.$http.post('/api/login', this.loginForm)
           pro
             .then(res => {
@@ -77,8 +110,6 @@ export default {
               return this.$message.error(err)
             })
             // this.$router.push({ name: 'home' })
-        }
-      })
     }
   }
 }
@@ -110,7 +141,7 @@ export default {
     }
     .title {
       display: block;
-      font-size: 20px;
+      font-size: 24px;
       color: skyblue;
       font-weight: bold;
     }

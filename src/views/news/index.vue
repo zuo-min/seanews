@@ -203,7 +203,6 @@ export default {
       // 把空的筛选条件都去除
       var searchData = {} // 筛选后的条件数据
       for (var i in this.searchForm) {
-        // i：代表遍历出来对象的成员属性名称： status、channel_id、page等等
         if (this.searchForm[i]) {
           searchData[i] = this.searchForm[i]
         }

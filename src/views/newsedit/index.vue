@@ -30,7 +30,7 @@
               <ul v-show="isTrue">
                 <li class="uploadbox">
                   <span>点击图标选择图片</span>
-                  <img v-if="editForm.photo" :src="editForm.photo" alt />
+                  <img v-if="editForm.image !== null" :src="editForm.image" alt />
                   <div v-else class="el-icon-picture-outline"></div>
                 </li>
               </ul>
@@ -55,118 +55,122 @@
   </div>
 </template>
 <script>
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 // 通过es6按需导入方式 导入需要的组件模块
-import { quillEditor } from "vue-quill-editor";
+import { quillEditor } from 'vue-quill-editor'
 
 export default {
-  name: "NewsEdit",
+  name: 'NewsEdit',
   components: {
     quillEditor
   },
-  data() {
+  data () {
     return {
       isTrue: false,
       typeList: [], // 接收类型列表数据
       editForm: {
-        title: "", // 文章标题
-        news: "", // 文章内容
-        image: "",
-        type: "",
-        photo: '', // 类型
-        pubdate: "" // 时间
+        title: '', // 文章标题
+        news: '', // 文章内容
+        image: '',
+        type: '', // 类型
+        pubdate: '' // 时间
       },
       rules: {
         title: [
-          { required: true, message: "文章标题必填" },
-          { min: 5, max: 30, message: "文章标题长度介于5-30个字符" }
+          { required: true, message: '文章标题必填' },
+          { min: 5, max: 30, message: '文章标题长度介于5-30个字符' }
         ],
-        news: [{ required: true, message: "新闻内容必填" }],
-        type: [{ required: true, message: "新闻类型必选" }],
-        pubdate: [{ required: true, message: "发布时间必填" }]
+        news: [{ required: true, message: '新闻内容必填' }],
+        type: [{ required: true, message: '新闻类型必选' }],
+        pubdate: [{ required: true, message: '发布时间必填' }]
       }
-    };
+    }
   },
-  created() {
-    this.getNewsType();
-    this.getNewsByid();
+  created () {
+    this.getNewsType()
+    this.getNewsByid()
   },
   computed: {
-    aid() {
-      return this.$route.params.aid;
+    aid () {
+      return this.$route.params.aid
     }
   },
   methods: {
-    getNewsType() {
-      var pro = this.$http.get("/api/newstype");
+    getNewsType () {
+      var pro = this.$http.get('/api/newstype')
       pro
         .then(res => {
           // console.log(res)
           if (res.data.status === 0) {
-            this.typeList = res.data.data;
+            this.typeList = res.data.data
           }
         })
         .catch(err => {
-          return this.$message.error("获取新闻列表失败!" + err);
-        });
+          return this.$message.error('获取新闻列表失败!' + err)
+        })
     },
-    editNews() {
+    editNews () {
       // 表单校验
       this.$refs.editFormRef.validate(valid => {
         if (valid) {
           // 把被添加的文章信息通过axios传递给服务器端存储
           // this.$http.post(地址,post数据,get请求字符串信息)
-          var pro = this.$http.post("/api/newsedit", this.editForm, {
+          var pro = this.$http.post('/api/newsedit', this.editForm, {
             params: { id: this.aid }
-          });
+          })
           pro
             .then(res => {
               if (res.data.status === 0) {
-                this.$message.success("新闻修改成功");
-                this.$router.push({ name: "news" });
+                this.$message.success('新闻修改成功')
+                this.$router.push({ name: 'news' })
               }
             })
             .catch(err => {
-              return this.$message.error("发布新闻失败" + err);
-            });
+              return this.$message.error('发布新闻失败' + err)
+            })
         }
-      });
+      })
     },
-    getNewsByid() {
-      var pro = this.$http.get("/api/newsbyid/", { params: { id: this.aid } });
+    getNewsByid () {
+      var pro = this.$http.get('/api/newsbyid/', { params: { id: this.aid } })
       pro
         .then(res => {
           if (res.data.status === 0) {
-            this.editForm = res.data.data[0];
+            this.editForm = res.data.data[0]
+            if (this.editForm.image) {
+              this.isTrue = true
+            } else {
+              this.isTrue = false
+            }
           }
         })
         .catch(err => {
-          return this.$message.error("根据id获取新闻信息出错!" + err);
-        });
+          return this.$message.error('根据id获取新闻信息出错!' + err)
+        })
     },
-    httpRequest(resource) {
+    httpRequest (resource) {
       // 1. FormData表单数据对象收集表单信息，即上传附件信息
-      var fd = new FormData();
+      var fd = new FormData()
       // 把图片的信息添加给fd对象
       // fd.append(名称，值)
-      fd.append("file", resource.file); // 文件已经被fd保存好了
+      fd.append('file', resource.file) // 文件已经被fd保存好了
 
       // 2. axios带着附件到达服务器端存储
-      var pro = this.$http.post("/api/newsadd_imgname", fd);
+      var pro = this.$http.post('/api/newsadd_imgname', fd)
       pro
         .then(res => {
           if (res.data.status === 0) {
-            this.editForm.photo = res.data.photo;
+            this.editForm.photo = res.data.photo
           }
         })
         .catch(err => {
-          return this.$message.error("图片上传失败：" + err);
-        });
+          return this.$message.error('图片上传失败：' + err)
+        })
     }
   }
-};
+}
 </script>
 <style lang='less' scoped>
 .time {

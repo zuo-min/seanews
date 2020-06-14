@@ -31,13 +31,13 @@
     <el-dialog title="密码修改" :visible.sync="isDia" top="300px" width="500px" @close="closeDig()">
       <el-form ref="passwordRef" :model="passwordForm" :rules="rules">
         <el-form-item label="旧密码:" prop="oldPwd">
-          <el-input v-model="passwordForm.oldPwd" type="password"></el-input>
+          <el-input v-model="passwordForm.oldPwd"></el-input>
         </el-form-item>
         <el-form-item label="新密码:" prop="newPwd">
-          <el-input v-model="passwordForm.newPwd" type="password"></el-input>
+          <el-input v-model="passwordForm.newPwd"></el-input>
         </el-form-item>
         <el-form-item label="确认密码:" prop="surePwd">
-          <el-input v-model="passwordForm.surePwd" type="password"></el-input>
+          <el-input v-model="passwordForm.surePwd"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="editPwd()">修改</el-button>

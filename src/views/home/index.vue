@@ -13,7 +13,7 @@
           <i class="el-icon-location"></i>
           <span slot="title">新闻总览页</span>
         </el-menu-item>
-        <el-submenu index="2" :style="{width:isCollapse?'65px':'200px'}">
+        <el-submenu index="/news" :style="{width:isCollapse?'65px':'200px'}">
           <template slot="title">
             <i class="el-icon-menu"></i>
             <span>新闻管理</span>
@@ -45,7 +45,7 @@
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
           <el-dropdown>
-            <span class="el-dropdown-link" v-if="photo === null">
+            <span class="el-dropdown-link" v-if="photo == false">
               <img src="./no.jpg" alt width="40" height="40" />
               {{name}}
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -56,8 +56,8 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>github地址</el-dropdown-item>
+              <el-dropdown-item @click.native="$router.push('account')">个人信息</el-dropdown-item>
+              <el-dropdown-item @click.native="github()">github地址</el-dropdown-item>
               <!-- el-dropdown-item本身是一个“组件”，
               组件是组多html标签的集合体，这个集合体绑定事件，
               不知道具体给到那个标签使用，因此事件绑定失败-->
@@ -86,7 +86,7 @@ export default {
   created () {
     bus.$on('upAccountPhoto', ph => {
       ph = ph.replace(/'/g, '')
-      console.log(ph)
+      // console.log(ph)
       // 更新sessionStorage中photo的信息
       var userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
       userInfo.photo = ph
@@ -120,6 +120,9 @@ export default {
           this.$router.push('/login')
         })
         .catch(() => {})
+    },
+    github() {
+      window.open('https://github.com/')
     }
   }
 }

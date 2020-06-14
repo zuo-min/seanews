@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="nav">
-      <span class="tit">海 诺 新 闻 网 平 台</span>
+      <span class="tit">海 诺 头 条 新 闻 网 平 台</span>
       <div class="lbt">
         <template>
           <el-carousel indicator-position="none" height="300px">
